@@ -9,9 +9,6 @@ List<TimeTablePair> generateTablesForSession(int tablesCount, TimeTablesProgress
 }
 
 List<TimeTablePair> getRarestOrMostDifficultTables(TimeTablesProgress progress, int tablesCount) {
-  // This function will analyze the progress data and return a list of tables that are either the rarest (least practiced) or the most difficult (lowest success rate).
-
-  // all possible pairs of times tables pairs with numbers between 2 and 10 and multipliers between 2 and 10, where possible we will also calculate the success rate and frequency of practice for each pair based on the progress data.
   final allPairs = <TimeTablePair>[];
 
   for (var tableNumber = 2; tableNumber <= 10; tableNumber++) {
@@ -26,29 +23,57 @@ List<TimeTablePair> getRarestOrMostDifficultTables(TimeTablesProgress progress, 
     }
   }
 
-  final sortedBySuccessRate = List<TimeTablePair>.from(allPairs)..sort((a, b) => a.successRate.compareTo(b.successRate));
+  final sortedBySuccessRate = List<TimeTablePair>.from(allPairs)
+    ..sort((a, b) {
+      final successComparison = a.successRate.compareTo(b.successRate);
+      if (successComparison != 0) {
+        return successComparison;
+      }
 
-  final sortedByFrequency = List<TimeTablePair>.from(allPairs)..sort((a, b) => a.frequency.compareTo(b.frequency));
+      return a.result.compareTo(b.result);
+    });
 
-  // Combine the two sorted lists to get a final list of tables that are either rare or difficult. For simplicity, we will just take the top tables from both lists and combine them, ensuring we don't have duplicates.
-  final selectedTables = <TimeTablePair>{};
+  final sortedByFrequency = List<TimeTablePair>.from(allPairs)
+    ..sort((a, b) {
+      final frequencyComparison = a.frequency.compareTo(b.frequency);
+      if (frequencyComparison != 0) {
+        return frequencyComparison;
+      }
 
-  for (var i = 0; i < tablesCount/2 && i < sortedByFrequency.length; i++) {
-    selectedTables.add(sortedByFrequency[i]);
-  }
+      return a.result.compareTo(b.result);
+    });
 
-  // We will add the tables from the success rate list, but only if they are not already in the selected tables from the frequency list, ensuring we reach the desired count of tables for the session.
-  for (var i = 0; i < tablesCount/2 && selectedTables.length < tablesCount; i++) {
-    if (!selectedTables.contains(sortedBySuccessRate[i])) {
-      selectedTables.add(sortedBySuccessRate[i]);
+  final selectedTables = <TimeTablePair>[];
+  final selectedKeys = <(int, int)>{};
+
+  void addTable(TimeTablePair table) {
+    final key = (table.number, table.multiplier);
+    if (selectedKeys.add(key)) {
+      selectedTables.add(table);
     }
   }
 
-  // Finally, we will shuffle the selected tables to ensure a random order for the session.
+  final halfCount = tablesCount ~/ 2;
 
-  final result = selectedTables.toList()..shuffle(Random());
+  for (var i = 0; i < halfCount && i < sortedByFrequency.length; i++) {
+    addTable(sortedByFrequency[i]);
+  }
 
+  for (var i = 0; i < halfCount && selectedTables.length < tablesCount; i++) {
+    addTable(sortedBySuccessRate[i]);
+  }
+
+  if (selectedTables.length < tablesCount) {
+    for (final table in allPairs) {
+      if (selectedTables.length == tablesCount) {
+        break;
+      }
+
+      addTable(table);
+    }
+  }
+
+  final result = selectedTables..shuffle(Random());
   return result;
-
 }
 
