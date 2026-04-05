@@ -1,6 +1,7 @@
 import 'package:impariamo/03_contiamo/01_data/datasources/hive_time_tables_progress_data_source.dart';
 import 'package:impariamo/03_contiamo/02_domain/domain.dart';
 import 'package:impariamo/03_contiamo/02_domain/repositories/time_tables_progress_repository.dart';
+import '../models/hive_progress_model.dart';
 
 class HiveTimeTablesProgressRepositoryImpl implements TimeTablesProgressRepository {
   final HiveTimeTablesProgressDataSource _dataSource;
@@ -10,12 +11,14 @@ class HiveTimeTablesProgressRepositoryImpl implements TimeTablesProgressReposito
   @override
   Future<TimeTablesProgress> getProgress() async {
     final rows = await _dataSource.loadStoredTimeTablesProgressRows();
-    return rows.map(_deserializeProgress).toList();
+    return rows.map((model) => model.toDomain()).toList();
   }
 
   @override
   Future<void> saveProgress(TimeTablesProgress progress) {
-    return _dataSource.storeTimeTablesProgressRows(progress.map(_serializeProgress).toList());
+    return _dataSource.storeTimeTablesProgressRows(
+      progress.map((domain) => HiveProgressModel.fromDomain(domain)).toList()
+    );
   }
 
   @override
@@ -62,22 +65,5 @@ class HiveTimeTablesProgressRepositoryImpl implements TimeTablesProgressReposito
           (item) => item!.pair.number == tableNumber && item.pair.multiplier == multiplier,
           orElse: () => null,
         );
-  }
-
-  Map<String, Object> _serializeProgress(Progress progress) {
-    return {
-      'number': progress.pair.number,
-      'multiplier': progress.pair.multiplier,
-      'correct': progress.correct,
-      'total': progress.total,
-    };
-  }
-
-  Progress _deserializeProgress(Map row) {
-    return Progress(
-      pair: TimeTablePair(number: row['number'] as int, multiplier: row['multiplier'] as int),
-      correct: row['correct'] as int,
-      total: row['total'] as int,
-    );
   }
 }

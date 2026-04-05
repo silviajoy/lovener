@@ -1,1 +1,1 @@
-export 'table_choice_session_bloc.dart';
+export 'table_classic_session_bloc.dart';

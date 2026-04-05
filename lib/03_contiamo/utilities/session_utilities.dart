@@ -25,6 +25,8 @@ List<TimeTablePair> getRarestOrMostDifficultTables(TimeTablesProgress progress, 
     }
   }
 
+  allPairs.shuffle(Random());
+
   final sortedBySuccessRate = List<TimeTablePair>.from(allPairs)
     ..sort((a, b) {
       final successComparison = progressFor(a).successRate.compareTo(progressFor(b).successRate);

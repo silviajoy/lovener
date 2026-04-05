@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:impariamo/03_contiamo/02_domain/repositories/time_tables_progress_repository.dart';
-import 'package:impariamo/03_contiamo/03_presentation/bloc/table_choice_session_bloc.dart';
+import 'package:impariamo/03_contiamo/03_presentation/bloc/table_classic_session_bloc.dart';
 import 'package:impariamo/src/router/app_router.dart';
 
 import '../../02_domain/entities/time_table.dart';
@@ -48,7 +48,7 @@ class TableChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TableChoiceSessionBloc(progressRepository)..add(TableChoiceSessionStartEvent()),
+      create: (_) => TableClassicSessionBloc(progressRepository)..add(TableClassicSessionStartEvent()),
       child: const _TableChoiceView(),
     );
   }
@@ -63,18 +63,18 @@ class _TableChoiceView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Scegli la Tabellina'),
       ),
-      body: BlocBuilder<TableChoiceSessionBloc, TableChoiceSessionState>(
+      body: BlocBuilder<TableClassicSessionBloc, TableClassicSessionState>(
         builder: (context, state) {
-          if (state.status == TableChoiceStatus.loading) {
+          if (state.status == TableClassicSessionStatus.loading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.status == TableChoiceStatus.ended) {
+          if (state.status == TableClassicSessionStatus.ended) {
             return _SessionEndedView(
               score: state.score,
               total: state.sessionTables.length,
               onBackToGames: () => context.go(AppRoutes.home),
-              onRestart: () => context.read<TableChoiceSessionBloc>().add(TableChoiceSessionStartEvent()),
+              onRestart: () => context.read<TableClassicSessionBloc>().add(TableClassicSessionStartEvent()),
             );
           }
 
@@ -105,17 +105,17 @@ class _TableChoiceView extends StatelessWidget {
                     child: _QuestionDisplay(table: currentTable),
                   ),
                   Expanded(
-                    child: (state.status == TableChoiceStatus.success)
+                    child: (state.status == TableClassicSessionStatus.success)
                         ? FallingGameArea(
                             choices: choiceList,
                             onAnswerSelected: (answer) {
-                              context.read<TableChoiceSessionBloc>().add(
-                                    TableChoiceSessionAnswerEvent(answer: answer, tableIndex: currentIndex),
+                              context.read<TableClassicSessionBloc>().add(
+                                    TableClassicSessionAnswerEvent(answer: answer, tableIndex: currentIndex),
                                   );
                             },
                             onMissedAll: () {
-                              context.read<TableChoiceSessionBloc>().add(
-                                    TableChoiceSessionAnswerEvent(answer: -1, tableIndex: currentIndex),
+                              context.read<TableClassicSessionBloc>().add(
+                                    TableClassicSessionAnswerEvent(answer: -1, tableIndex: currentIndex),
                                   );
                             },
                             // Allow passing any FallingEntity builder
@@ -130,11 +130,11 @@ class _TableChoiceView extends StatelessWidget {
                   ),
                 ],
               ),
-              if (state.status == TableChoiceStatus.between)
+              if (state.status == TableClassicSessionStatus.between)
                 GameFeedbackPopup(
                   isSuccess: state.success == true,
                   onNext: () {
-                    context.read<TableChoiceSessionBloc>().add(const TableChoiceSessionNextEvent());
+                    context.read<TableClassicSessionBloc>().add(const TableClassicSessionNextEvent());
                   },
                 ),
             ],

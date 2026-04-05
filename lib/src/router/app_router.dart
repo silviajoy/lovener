@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:impariamo/03_contiamo/02_domain/repositories/time_tables_progress_repository.dart';
 import 'package:impariamo/03_contiamo/03_presentation/pages/mini_games.dart';
 import 'package:impariamo/03_contiamo/03_presentation/pages/table_choice.dart';
+import 'package:impariamo/03_contiamo/03_presentation/pages/table_input.dart';
 
 final getIt = GetIt.instance;
 
@@ -20,7 +21,13 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: TableChoice.route,
       builder: (context, state) => TableChoice(
-        progressRepository: getIt<TimeTablesProgressRepository>(),
+        progressRepository: getIt<TimeTablesProgressRepository>(instanceName: 'TableChoiceRepository'),
+      ),
+    ),
+    GoRoute(
+      path: TableInput.route,
+      builder: (context, state) => TableInput(
+        progressRepository: getIt<TimeTablesProgressRepository>(instanceName: 'TableInputRepository'),
       ),
     ),
   ],

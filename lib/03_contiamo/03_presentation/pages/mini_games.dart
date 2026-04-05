@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'table_choice.dart';
+import 'table_input.dart';
 
 class MiniGames extends StatelessWidget {
   
   final gamesData = [
     {'title': 'Cosa scegli?', 'description': 'Tabelline a scelta multipla', 'route': TableChoice.route},
-    {'title': 'Game 2', 'description': 'Description of Game 2', 'route': '/game2'},
+    {'title': 'Scrivi tu', 'description': 'Scrivi il risultato corretto', 'route': TableInput.route},
     {'title': 'Game 3', 'description': 'Description of Game 3', 'route': '/game3'},
   ];
   

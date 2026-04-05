@@ -1,1 +1,1 @@
-final TableChoiceSessionLength = 10;
+const int tableGameSessionLength = 5;
