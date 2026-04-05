@@ -9,23 +9,25 @@ List<TimeTablePair> generateTablesForSession(int tablesCount, TimeTablesProgress
 }
 
 List<TimeTablePair> getRarestOrMostDifficultTables(TimeTablesProgress progress, int tablesCount) {
+  final progressByPair = <TimeTablePair, Progress>{
+    for (final item in progress) item.pair: item,
+  };
+
+  Progress progressFor(TimeTablePair pair) {
+    return progressByPair[pair] ?? Progress(pair: pair, correct: 0, total: 0);
+  }
+
   final allPairs = <TimeTablePair>[];
 
   for (var tableNumber = 2; tableNumber <= 10; tableNumber++) {
     for (var multiplier = 2; multiplier <= 10; multiplier++) {
-      final progressForPair = progress.firstWhere(
-        (p) => p.pair.number == tableNumber && p.pair.multiplier == multiplier,
-        orElse: () => Progress(pair: TimeTablePair(number: tableNumber, multiplier: multiplier, successRate: 0.0, frequency: 0), correct: 0, total: 0),
-      );
-      final successRate = progressForPair.total > 0 ? progressForPair.correct / progressForPair.total : 0.0;
-      final frequency = progressForPair.total;
-      allPairs.add(TimeTablePair(number: tableNumber, multiplier: multiplier, successRate: successRate, frequency: frequency));
+      allPairs.add(TimeTablePair(number: tableNumber, multiplier: multiplier));
     }
   }
 
   final sortedBySuccessRate = List<TimeTablePair>.from(allPairs)
     ..sort((a, b) {
-      final successComparison = a.successRate.compareTo(b.successRate);
+      final successComparison = progressFor(a).successRate.compareTo(progressFor(b).successRate);
       if (successComparison != 0) {
         return successComparison;
       }
@@ -35,7 +37,7 @@ List<TimeTablePair> getRarestOrMostDifficultTables(TimeTablesProgress progress, 
 
   final sortedByFrequency = List<TimeTablePair>.from(allPairs)
     ..sort((a, b) {
-      final frequencyComparison = a.frequency.compareTo(b.frequency);
+      final frequencyComparison = progressFor(a).frequency.compareTo(progressFor(b).frequency);
       if (frequencyComparison != 0) {
         return frequencyComparison;
       }

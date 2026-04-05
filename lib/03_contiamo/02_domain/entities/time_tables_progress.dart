@@ -11,6 +11,10 @@ class Progress extends Equatable {
   final int total;
   const Progress({required this.pair, required this.correct, required this.total});
 
+  double get successRate => total > 0 ? correct / total : 0.0;
+
+  int get frequency => total;
+
   @override
   List<Object?> get props => [pair, correct, total];
 }

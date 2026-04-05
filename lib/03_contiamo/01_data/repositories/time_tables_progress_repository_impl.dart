@@ -32,13 +32,13 @@ class MockTimeTablesProgressRepositoryImpl implements TimeTablesProgressReposito
 
   FutureOr<TimeTablesProgress>? _mockProgress() {
     return [
-      Progress(pair: TimeTablePair(number: 2, multiplier: 3, successRate: 0.8, frequency: 10), correct: 8, total: 10),
-      Progress(pair: TimeTablePair(number: 5, multiplier: 4, successRate: 0.5, frequency: 20), correct: 10, total: 20),
-      Progress(pair: TimeTablePair(number: 7, multiplier: 6, successRate: 0.3, frequency: 15), correct: 5, total: 15),
+      Progress(pair: TimeTablePair(number: 2, multiplier: 3), correct: 8, total: 10),
+      Progress(pair: TimeTablePair(number: 5, multiplier: 4), correct: 10, total: 20),
+      Progress(pair: TimeTablePair(number: 7, multiplier: 6), correct: 5, total: 15),
     ];
   }
   
   FutureOr<Progress?>? _mockPairProgress(int tableNumber, int multiplier) {
-    return Progress(pair: TimeTablePair(number: tableNumber, multiplier: multiplier, successRate: 0.8, frequency: 10), correct: 8, total: 10);
+    return Progress(pair: TimeTablePair(number: tableNumber, multiplier: multiplier), correct: 8, total: 10);
   }
 }

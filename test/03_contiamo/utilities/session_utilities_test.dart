@@ -10,7 +10,7 @@ void main() {
       for (var multiplier = 2; multiplier <= 10; multiplier++) {
         progress.add(
           Progress(
-            pair: TimeTablePair(number: number, multiplier: multiplier, successRate: 1.0, frequency: 10),
+            pair: TimeTablePair(number: number, multiplier: multiplier),
             correct: 10,
             total: 10,
           ),
@@ -23,7 +23,7 @@ void main() {
         (item) => item.pair.number == number && item.pair.multiplier == multiplier,
       );
       progress[index] = Progress(
-        pair: TimeTablePair(number: number, multiplier: multiplier, successRate: 0.0, frequency: 0),
+        pair: TimeTablePair(number: number, multiplier: multiplier),
         correct: correct,
         total: total,
       );
