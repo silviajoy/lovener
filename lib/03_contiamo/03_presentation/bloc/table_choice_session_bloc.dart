@@ -25,10 +25,11 @@ class TableChoiceSessionBloc extends Bloc<TableChoiceSessionEvent, TableChoiceSe
     on<TableChoiceSessionEndEvent>(_onEnd);
   }
 
-  void _onStart(TableChoiceSessionStartEvent event, Emitter<TableChoiceSessionState> emit) {
+  Future<void> _onStart(TableChoiceSessionStartEvent event, Emitter<TableChoiceSessionState> emit) async {
     emit(state.copyWith(status: TableChoiceStatus.loading, score: 0, currentTableIndex: 0, sessionProgress: []));
 
-    _progressRepository.getProgress().then((progress) {
+    try {
+      final progress = await _progressRepository.getProgress();
       final tables = generateTablesForSession(TableChoiceSessionLength, progress);
 
       emit(state.copyWith(
@@ -36,9 +37,9 @@ class TableChoiceSessionBloc extends Bloc<TableChoiceSessionEvent, TableChoiceSe
         sessionTables: tables,
         currentTableIndex: 0,
       ));
-    }).catchError((error) {
+    } catch (_) {
       emit(state.copyWith(status: TableChoiceStatus.failure));
-    });
+    }
   }
 
   void _onAnswer(TableChoiceSessionAnswerEvent event, Emitter<TableChoiceSessionState> emit) {
@@ -59,7 +60,7 @@ class TableChoiceSessionBloc extends Bloc<TableChoiceSessionEvent, TableChoiceSe
     ));
   }
 
-  void _onNext(TableChoiceSessionNextEvent event, Emitter<TableChoiceSessionState> emit) {
+  Future<void> _onNext(TableChoiceSessionNextEvent event, Emitter<TableChoiceSessionState> emit) async {
     final nextIndex = state.currentTableIndex + 1;
     if (nextIndex < state.sessionTables.length) {
       emit(state.copyWith(
@@ -68,16 +69,18 @@ class TableChoiceSessionBloc extends Bloc<TableChoiceSessionEvent, TableChoiceSe
         success: null,
       ));
     } else {
-      _onEnd(TableChoiceSessionEndEvent(), emit);
+      emit(state.copyWith(status: TableChoiceStatus.loading));
+      await _onEnd(TableChoiceSessionEndEvent(), emit);
     }
   }
 
-  void _onEnd(TableChoiceSessionEndEvent event, Emitter<TableChoiceSessionState> emit) {
+  Future<void> _onEnd(TableChoiceSessionEndEvent event, Emitter<TableChoiceSessionState> emit) async {
     emit(state.copyWith(status: TableChoiceStatus.loading));
-    _progressRepository.updatePairsProgress(state.sessionProgress).then((_) {
+    try {
+      await _progressRepository.updatePairsProgress(state.sessionProgress);
       emit(state.copyWith(status: TableChoiceStatus.ended));
-    }).catchError((error) {
+    } catch (_) {
       emit(state.copyWith(status: TableChoiceStatus.failure));
-    });
+    }
   }
 }

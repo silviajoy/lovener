@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+import 'package:impariamo/03_contiamo/01_data/datasources/hive_time_tables_progress_data_source.dart';
+import 'package:impariamo/03_contiamo/01_data/repositories/hive_time_tables_progress_repository_impl.dart';
 import 'package:impariamo/03_contiamo/01_data/repositories/time_tables_progress_repository_impl.dart';
 import 'package:impariamo/03_contiamo/02_domain/repositories/time_tables_progress_repository.dart';
 
@@ -6,7 +8,17 @@ import 'package:impariamo/03_contiamo/02_domain/repositories/time_tables_progres
 final getIt = GetIt.instance;
 
 void configureDependencies() {
-  getIt.registerLazySingleton<TimeTablesProgressRepository>(
-    () => MockTimeTablesProgressRepositoryImpl(),
+  const useMockStorage = bool.fromEnvironment('MOCK_MODE', defaultValue: false);
+
+  getIt.registerLazySingleton<HiveTimeTablesProgressDataSource>(
+    HiveTimeTablesProgressDataSource.new,
   );
+
+  getIt.registerLazySingleton<TimeTablesProgressRepository>(() {
+    if (useMockStorage) {
+      return MockTimeTablesProgressRepositoryImpl();
+    }
+
+    return HiveTimeTablesProgressRepositoryImpl(getIt<HiveTimeTablesProgressDataSource>());
+  });
 }
