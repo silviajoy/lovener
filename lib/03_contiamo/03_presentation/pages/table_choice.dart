@@ -36,7 +36,7 @@ class GameConfig {
 }
 
 class TableChoice extends StatelessWidget {
-  static final route = '/contiamo/table-choice';
+  static final route = '/table-choice';
 
   final TimeTablesProgressRepository progressRepository;
 

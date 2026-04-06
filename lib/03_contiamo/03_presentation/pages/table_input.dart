@@ -10,7 +10,7 @@ import '../bloc/table_classic_session_bloc.dart';
 import 'widgets/numpad.dart';
 
 class TableInput extends StatelessWidget {
-  static final route = '/contiamo/table-input';
+  static final route = '/table-input';
 
   final TimeTablesProgressRepository progressRepository;
 

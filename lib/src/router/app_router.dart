@@ -24,22 +24,24 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.home,
       builder: (context, state) =>  MiniGames(),
-    ),
-    GoRoute(
-      path: TableChoice.route,
-      builder: (context, state) => TableChoice(
-        progressRepository: getIt<TimeTablesProgressRepository>(instanceName: 'TableChoiceRepository'),
-      ),
-    ),
-    GoRoute(
-      path: TableInput.route,
-      builder: (context, state) => TableInput(
-        progressRepository: getIt<TimeTablesProgressRepository>(instanceName: 'TableInputRepository'),
-      ),
-    ),
-    GoRoute(
-      path: GuessTablePage.route,
-      builder: (context, state) => const GuessTablePage(),
+      routes: [
+        GoRoute(
+          path: TableChoice.route,
+          builder: (context, state) => TableChoice(
+            progressRepository: getIt<TimeTablesProgressRepository>(instanceName: 'TableChoiceRepository'),
+          ),
+        ),
+        GoRoute(
+          path: TableInput.route,
+          builder: (context, state) => TableInput(
+            progressRepository: getIt<TimeTablesProgressRepository>(instanceName: 'TableInputRepository'),
+          ),
+        ),
+        GoRoute(
+          path: GuessTablePage.route,
+          builder: (context, state) => const GuessTablePage(),
+        ),
+      ]
     ),
   ],
 );

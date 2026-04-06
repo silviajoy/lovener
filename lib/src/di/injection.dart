@@ -23,7 +23,8 @@ void configureDependencies() {
       return MockTimeTablesProgressRepositoryImpl();
     }
     return HiveTimeTablesProgressRepositoryImpl(
-      HiveTimeTablesProgressDataSource(boxName: 'time_tables_progress'),
+      HiveTimeTablesProgressDataSource(boxName: 'time_tables_progress'), 
+      HiveGuessTableProgressDataSource(boxName: 'guess_table_progress_choice'),
     );
   }, instanceName: 'TableChoiceRepository');
 
@@ -33,6 +34,7 @@ void configureDependencies() {
     }
     return HiveTimeTablesProgressRepositoryImpl(
       HiveTimeTablesProgressDataSource(boxName: 'time_tables_input_progress'),
+      HiveGuessTableProgressDataSource(boxName: 'guess_table_progress_input'),
     );
   }, instanceName: 'TableInputRepository');
 
@@ -42,7 +44,7 @@ void configureDependencies() {
     }
     return HiveTimeTablesProgressRepositoryImpl(
       HiveTimeTablesProgressDataSource(boxName: 'time_tables_progress'),
-      guessDataSource: HiveGuessTableProgressDataSource(boxName: 'guess_table_progress'),
+      HiveGuessTableProgressDataSource(boxName: 'guess_table_progress'),
     );
   }, instanceName: 'GuessTableRepository');
 }

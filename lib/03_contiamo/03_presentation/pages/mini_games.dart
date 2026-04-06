@@ -20,7 +20,7 @@ class MiniGames extends StatelessWidget {
       subtitle: Text(game['description']!),
       onTap: () {
         // Navigate to the game route
-        GoRouter.of(context).go(game['route']!);
+        GoRouter.of(context).push(game['route']!);
       },
     );
   };
