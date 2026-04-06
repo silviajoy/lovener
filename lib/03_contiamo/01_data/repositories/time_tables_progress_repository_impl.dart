@@ -30,6 +30,21 @@ class MockTimeTablesProgressRepositoryImpl implements TimeTablesProgressReposito
   @override
   Future<Progress?> getPairProgress(int tableNumber, int multiplier) => Future.value(_mockPairProgress(tableNumber, multiplier ));
 
+  @override
+  Future<List<GuessTableProgress>> getGuessTableProgress() => Future.value(_mockGuessTableProgress());
+
+  @override
+  Future<void> saveGuessTableProgress(List<GuessTableProgress> progress) => Future.value();
+
+  @override
+  Future<void> updateGuessTableProgress({
+    required int tableNumber,
+    required int points,
+  }) => Future.value();
+
+  @override
+  Future<void> updateGuessTablesProgress(List<GuessTableProgress> progress) => Future.value();
+
   FutureOr<TimeTablesProgress>? _mockProgress() {
     return [
       Progress(pair: TimeTablePair(number: 2, multiplier: 3), correct: 8, total: 10),
@@ -40,5 +55,13 @@ class MockTimeTablesProgressRepositoryImpl implements TimeTablesProgressReposito
   
   FutureOr<Progress?>? _mockPairProgress(int tableNumber, int multiplier) {
     return Progress(pair: TimeTablePair(number: tableNumber, multiplier: multiplier), correct: 8, total: 10);
+  }
+
+  List<GuessTableProgress> _mockGuessTableProgress() {
+    return [
+      GuessTableProgress(tableNumber: 3, averagePoints: 5.0, total: 10),
+      GuessTableProgress(tableNumber: 6, averagePoints: 2.0, total: 15),
+      GuessTableProgress(tableNumber: 8, averagePoints: 10.0, total: 12),
+    ];
   }
 }

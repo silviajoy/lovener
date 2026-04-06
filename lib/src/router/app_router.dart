@@ -4,6 +4,7 @@ import 'package:impariamo/03_contiamo/02_domain/repositories/time_tables_progres
 import 'package:impariamo/03_contiamo/03_presentation/pages/mini_games.dart';
 import 'package:impariamo/03_contiamo/03_presentation/pages/table_choice.dart';
 import 'package:impariamo/03_contiamo/03_presentation/pages/table_input.dart';
+import 'package:impariamo/03_contiamo/03_presentation/pages/guess_table_page.dart';
 
 final getIt = GetIt.instance;
 
@@ -29,6 +30,10 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => TableInput(
         progressRepository: getIt<TimeTablesProgressRepository>(instanceName: 'TableInputRepository'),
       ),
+    ),
+    GoRoute(
+      path: GuessTablePage.route,
+      builder: (context, state) => const GuessTablePage(),
     ),
   ],
 );
