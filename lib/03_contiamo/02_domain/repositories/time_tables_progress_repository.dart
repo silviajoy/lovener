@@ -1,44 +1,51 @@
 import 'package:impariamo/03_contiamo/02_domain/domain.dart';
 
-/// Repository for managing TimeTablesProgress data.
-/// Handles persistence and retrieval of user progress in time tables exercises.
+/// The central domain interface defining the required contract for tracking
+/// learning progress throughout the math modules.
+///
+/// In Clean Architecture, the Presentation (BLoC) calls these methods to
+/// manage domain states, oblivious to whether the implementing Data layer
+/// uses Hive locally or an API remotely.
 abstract class TimeTablesProgressRepository {
-  /// Retrieves the current progress data for the user.
-  /// Returns [TimeTablesProgress] with all recorded attempts and statistics.
+  /// Fetches the exhaustive list of all time table attempts.
+  /// 
+  /// Typically returns the history of individual [Progress] records.
   Future<TimeTablesProgress> getProgress();
 
-  /// Saves the progress data to storage.
-  /// Updates existing progress or creates new record if none exists.
+  /// Persists a fully constructed [TimeTablesProgress] list to the data layer.
   Future<void> saveProgress(TimeTablesProgress progress);
 
-  /// Updates progress for a specific table pair (number, multiplier).
-  /// Records a new attempt with its result.
+  /// Fast-path update method when you just need to increment one attempt
+  /// for a specific mathematical pair.
   Future<void> updatePairProgress({
     required int tableNumber,
     required int multiplier,
     required bool isCorrect,
   });
 
+  /// Batch update multiple pairs efficiently.
   Future<void> updatePairsProgress(List<Progress> pairs);
 
-  /// Resets all progress data to initial state.
+  /// Wipes all historical data and resets user progress to factory defaults.
   Future<void> resetProgress();
 
-  /// Retrieves progress for a specific pair.
+  /// Looks up a precise specific progress history to check how often a user
+  /// missed a specific problem previously.
   Future<Progress?> getPairProgress(int tableNumber, int multiplier);
 
-  /// Retrieves the current guess table progress data for the user.
+  /// Specialized call used by the Guess Table game to retrieve overall 
+  /// base number mastery.
   Future<List<GuessTableProgress>> getGuessTableProgress();
 
-  /// Saves the guess table progress data to storage.
+  /// Persists the full [GuessTableProgress] list to storage.
   Future<void> saveGuessTableProgress(List<GuessTableProgress> progress);
 
-  /// Updates guess table progress for a specific base table.
+  /// Shortcut to update the user's score for a specific Guess Table base number.
   Future<void> updateGuessTableProgress({
     required int tableNumber,
     required int points,
   });
 
-  /// Updates progress for a list of base tables.
+  /// Batch update of scores for multiple Guess Table base numbers.
   Future<void> updateGuessTablesProgress(List<GuessTableProgress> progress);
 }

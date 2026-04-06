@@ -8,10 +8,16 @@ import 'package:impariamo/03_contiamo/03_presentation/pages/guess_table_page.dar
 
 final getIt = GetIt.instance;
 
+/// Application routing constants defining the declarative path strings.
 class AppRoutes {
+  /// The root path of the application.
   static const home = '/';
 }
 
+/// The global [GoRouter] instance configured with all application routes.
+///
+/// Handlers inject specific [TimeTablesProgressRepository] implementations 
+/// based on the game mode being opened to ensure independent progress tracking.
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.home,
   routes: [
